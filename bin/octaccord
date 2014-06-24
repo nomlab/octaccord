@@ -54,5 +54,8 @@ pp issues if $OCTACCORD_DEBUG
 
 issues.each do |issue|
   label_names = issue.labels.map{|label| label.name}.join(',')
-  puts "##{issue.number} #{issue.title} (#{issue.assignee.login rescue nil}) [#{label_names}]"
+  headline = "* [##{issue.number}](../issues/#{issue.number}) #{issue.title} "
+  headline << "**#{issue.assignee.login}** " if issue.assignee
+  headline << "_#{label_names}_" if label_names.to_s != ""
+  puts headline
 end
