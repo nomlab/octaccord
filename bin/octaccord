@@ -27,6 +27,17 @@ config = Pit.get("github.com", :require => {
 client = Octokit::Client.new(:login => config["login"],
                              :password => config["password"])
 
+# parse options
+while ARGV[0] =~ /^--(.*)/
+  case $1
+  when "debug"
+    $OCTACCORD_DEBUG = true
+  when "test"
+    $OCTACCORD_TEST = true
+  end
+  ARGV.shift
+end
+
 unless /.*\/.*/ =~ ARGV[0]
   STDERR.print "Usage: octaccord github-user/repos\n"
   exit 1
@@ -37,8 +48,9 @@ repos_name = ARGV.shift
 ## main
 
 Octokit.auto_paginate = true
-pp issues
 issues = client.issues repos_name
+
+pp issues if $OCTACCORD_DEBUG
 
 issues.each do |issue|
   label_names = issue.labels.map{|label| label.name}.join(',')
