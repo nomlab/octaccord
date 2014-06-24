@@ -48,14 +48,53 @@ repos_name = ARGV.shift
 ## main
 
 Octokit.auto_paginate = true
-issues = client.issues repos_name
+# time = Time.parse("2014-06-20 09:00")
+time = Time.parse("2014-01-20 09:00")
+issues = client.list_issues(repos_name, since: time, state: :all)
 
 pp issues if $OCTACCORD_DEBUG
 
+open, closed = "", ""
+
+puts "## issues since #{time.strftime('%F')}"
+puts "|No.|Assignee|Title|Labels|MS|Updated|State|"
+puts "|:----|----|:----|:----|:----|----|----|"
+
 issues.each do |issue|
-  label_names = issue.labels.map{|label| label.name}.join(',')
-  headline = "* [##{issue.number}](../issues/#{issue.number}) #{issue.title} "
-  headline << "**#{issue.assignee.login}** " if issue.assignee
-  headline << "_#{label_names}_" if label_names.to_s != ""
-  puts headline
+  label_names = issue.labels.map{|label| label.name}.join(',') || " "
+  if issue.assignee
+    avatar = "![#{issue.assignee.login}](#{issue.assignee.avatar_url}s=30)"
+  else
+    avatar = " "
+  end
+
+  if issue.pull_request
+    pr = "PR"
+    type = "pull"
+  else
+    pr = ""
+    type = "issues"
+  end
+
+  title = issue.title
+  title = "~~#{title}~~" if issue.state == "closed"
+
+  headline = []
+  headline << "[##{issue.number}](../#{type}/#{issue.number}) #{pr}"
+  headline << "#{avatar}"
+  headline << title
+  headline << label_names
+  headline << if issue.milestone then "_#{issue.milestone.title}_" else " " end
+  headline << "#{issue.updated_at.localtime.strftime('%b %d')}"
+  headline << "#{issue.state}"
+  headline = "| " + headline.join(" | ") + " |\n"
+
+  if issue.state == "closed"
+    closed << headline
+  else
+    open << headline
+  end
 end
+
+puts open
+puts closed
