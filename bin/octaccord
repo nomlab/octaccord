@@ -27,11 +27,18 @@ config = Pit.get("github.com", :require => {
 client = Octokit::Client.new(:login => config["login"],
                              :password => config["password"])
 
+unless /.*\/.*/ =~ ARGV[0]
+  STDERR.print "Usage: octaccord github-user/repos\n"
+  exit 1
+end
+
+repos_name = ARGV.shift
+
 ## main
 
 Octokit.auto_paginate = true
-issues = client.issues 'nomlab/LastNote'
 pp issues
+issues = client.issues repos_name
 
 issues.each do |issue|
   label_names = issue.labels.map{|label| label.name}.join(',')
