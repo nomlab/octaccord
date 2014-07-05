@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# Create Iteration pages automatically from Github issues
-
 if File.symlink?(__FILE__) and ENV["RBENV_VERSION"]
   ENV["RBENV_VERSION"] = nil
   shims_path = File.expand_path("shims", ENV["RBENV_ROOT"])
@@ -19,82 +17,40 @@ require "pp"
 
 Encoding.default_external="UTF-8"
 
-config = Pit.get("github.com", :require => {
-        "login"    => "Your login name here",
-        "password" => "Your password here"
-})
+class OctaccordCLI < Thor
+  check_unknown_options!
+  package_name 'Octaccord'
 
-client = Octokit::Client.new(:login => config["login"],
-                             :password => config["password"])
+  class_option :repository, :desc => "Set github repository"
+  map ["--version", "-v"] => :version
 
-# parse options
-while ARGV[0] =~ /^--(.*)/
-  case $1
-  when "debug"
-    $OCTACCORD_DEBUG = true
-  when "test"
-    $OCTACCORD_TEST = true
-  end
-  ARGV.shift
-end
+  default_command :help
+  map ["--help", "-h"] => :help
 
-unless /.*\/.*/ =~ ARGV[0]
-  STDERR.print "Usage: octaccord github-user/repos\n"
-  exit 1
-end
-
-repos_name = ARGV.shift
-
-## main
-
-Octokit.auto_paginate = true
-# time = Time.parse("2014-06-20 09:00")
-time = Time.parse("2014-01-20 09:00")
-issues = client.list_issues(repos_name, since: time, state: :all)
-
-pp issues if $OCTACCORD_DEBUG
-
-open, closed = "", ""
-
-puts "## issues since #{time.strftime('%F')}"
-puts "|No.|Assignee|Title|Labels|MS|Updated|State|"
-puts "|:----|----|:----|:----|:----|----|----|"
-
-issues.each do |issue|
-  label_names = issue.labels.map{|label| label.name}.join(',') || " "
-  if issue.assignee
-    avatar = "![#{issue.assignee.login}](#{issue.assignee.avatar_url}s=30)"
-  else
-    avatar = " "
+  desc "version", "Show version"
+  def version
+    puts Octaccord::VERSION
   end
 
-  if issue.pull_request
-    pr = "PR"
-    type = "pull"
-  else
-    pr = ""
-    type = "issues"
+  ################################################################
+  ## scan
+  ################################################################
+  desc "scan REPOSITORY RANGE", "Scan issues in RANGE"
+
+  long_desc <<-LONGDESC
+    scan issues in date RANGE.
+  LONGDESC
+
+  method_option :format, :desc => "Set printing format (pbl, list, table)"
+  def scan(repos, range = :all)
+    config = Pit.get("github.com", :require => {
+      "login"    => "Your login name here",
+      "password" => "Your password here"
+    })
+    Octokit.auto_paginate = true
+    client = Octokit::Client.new(:login => config["login"], :password => config["password"])
+    Octaccord::Command::Scan.new(client, repos, range, options[:format] || :list)
   end
+end # class OctaccordCLI
 
-  title = issue.title
-  title = "~~#{title}~~" if issue.state == "closed"
-
-  headline = []
-  headline << "[##{issue.number}](../#{type}/#{issue.number}) #{pr}"
-  headline << "#{avatar}"
-  headline << title
-  headline << label_names
-  headline << if issue.milestone then "_#{issue.milestone.title}_" else " " end
-  headline << "#{issue.updated_at.localtime.strftime('%b %d')}"
-  headline << "#{issue.state}"
-  headline = "| " + headline.join(" | ") + " |\n"
-
-  if issue.state == "closed"
-    closed << headline
-  else
-    open << headline
-  end
-end
-
-puts open
-puts closed
+command = OctaccordCLI.start(ARGV)
