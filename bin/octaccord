@@ -21,6 +21,8 @@ class OctaccordCLI < Thor
   check_unknown_options!
   package_name 'Octaccord'
 
+  class_option :debug, :desc => "Set debug flag"
+
   map ["--version", "-v"] => :version
 
   default_command :help
