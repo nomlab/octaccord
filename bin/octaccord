@@ -21,7 +21,6 @@ class OctaccordCLI < Thor
   check_unknown_options!
   package_name 'Octaccord'
 
-  class_option :repository, :desc => "Set github repository"
   map ["--version", "-v"] => :version
 
   default_command :help
@@ -33,7 +32,7 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
-  ## scan
+  ## Command: scan
   ################################################################
   desc "scan REPOSITORY RANGE", "Scan issues in RANGE"
 
@@ -42,6 +41,7 @@ class OctaccordCLI < Thor
   LONGDESC
 
   method_option :format, :desc => "Set printing format (pbl, list, table)"
+
   def scan(repos, range = :all)
     config = Pit.get("github.com", :require => {
       "login"    => "Your login name here",
