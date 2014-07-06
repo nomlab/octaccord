@@ -87,7 +87,7 @@ module Octaccord
       private
 
       def format_item(issue)
-        headline = "* #{issue.link} #{issue.status} #{issue.title}"
+        headline = "##### #{issue.link} #{issue.status} #{issue.title}\n#{issue.comments}"
       end
     end # class List
 
@@ -143,6 +143,17 @@ module Octaccord
         "[##{@issue.number}](../#{type}/#{@issue.number} \"#{@issue.title}\")"
       end
 
+      def comments
+        # https://github.com/octokit/octokit.rb#uri-templates
+        comments = []
+
+        STDERR.puts "* issue comments: #{@issue.rels[:comments].href}"
+
+        @issue.rels[:comments].get.data.each do |c|
+          comments << adjust_indent(c.body)
+        end
+        return comments.join
+      end
       def title
         if @issue.state == "closed" then "~~#{@issue.title}~~" else @issue.title end
       end
@@ -153,6 +164,16 @@ module Octaccord
 
       def milestone
         if @issue.milestone then "_#{@issue.milestone.title}_" else nil end
+      end
+
+      private
+      def adjust_indent(body)
+        new_body = ""
+        body.split(/\r?\n/).each do |line|
+          line = "#####" + line if line =~ /^\#+/
+          new_body << line + "\n"
+        end
+        return new_body
       end
     end # class Issue
   end # module Formatter
