@@ -35,7 +35,7 @@ module Octaccord
       private
 
       def format_body
-        @issues.map{|issue| format_item(issue)}.join("\n") + "\n"
+        @issues.map{|issue| format_item(issue)}.compact.join("\n") + "\n"
       end
 
       def format_frame_header
@@ -59,6 +59,7 @@ module Octaccord
       end
 
       def format_item(issue)
+        return nil unless issue.labels =~ /PBL/
         cols = []
         cols << "#{issue.link} #{issue.status}"
         cols << issue.title
