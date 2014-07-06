@@ -2,8 +2,10 @@ module Octaccord
   class FormatterNameError < StandardError; end
 
   module Formatter
-    def self.build(formatter: :list)
+    def self.build(formatter: :text)
       case formatter.to_sym
+      when :text
+        Text.new
       when :pbl
         Pbl.new
       when :table
@@ -49,6 +51,17 @@ module Octaccord
       def format_header ;""; end
       def format_footer ;""; end
     end
+
+    class Text < Base
+      private
+
+      def format_frame_header ; ""; end
+      def format_frame_footer ; ""; end
+
+      def format_item(issue)
+        issue.summary
+      end
+    end # class List
 
     class Pbl < Base
       private
@@ -119,6 +132,10 @@ module Octaccord
 
       def pr
         if @issue.pull_request then ":arrow_upper_left:" else nil end
+      end
+
+      def summary
+        "##{@issue.number} #{@issue.title}" + (labels != "" ? " (#{labels})" : "")
       end
 
       def link

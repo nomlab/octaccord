@@ -51,7 +51,7 @@ class OctaccordCLI < Thor
     })
     Octokit.auto_paginate = true
     client = Octokit::Client.new(:login => config["login"], :password => config["password"])
-    Octaccord::Command::Scan.new(client, repos, range, options[:format] || :list)
+    Octaccord::Command::Scan.new(client, repos, range, options[:format] || :text)
   end
 end # class OctaccordCLI
 
