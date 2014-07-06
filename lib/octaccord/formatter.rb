@@ -126,7 +126,7 @@ module Octaccord
       end
 
       def title
-        if @issue.state == "closed" then "~~#{title}~~" else @issue.title end
+        if @issue.state == "closed" then "~~#{@issue.title}~~" else @issue.title end
       end
 
       def labels
