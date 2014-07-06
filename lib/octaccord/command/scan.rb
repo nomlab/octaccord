@@ -9,10 +9,12 @@ module Octaccord
       end
 
       def scan(client, repos, range, formatter)
-        issues = client.list_issues(repos)
-        pp issues
+        # https://help.github.com/articles/searching-issues
+        # or issues = client.list_issues(repos)
+        # type:issue means ignore pull request
+        issues = client.search_issues("repo:#{repos} type:issue state:open").items
+
         issues.each do |issue|
-          next if issue.pull_request # we don't care about PR
           formatter << issue
         end
         print formatter.to_s
