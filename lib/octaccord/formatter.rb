@@ -74,11 +74,11 @@ module Octaccord
       def format_item(issue)
         return nil unless issue.labels =~ /PBL/
         cols = []
-        cols << "#{issue.link} #{issue.status}"
+        cols << "#{issue.plain_link}"
         cols << issue.title
-        cols << " " # Story
-        cols << " " # Demo
-        cols << " " # Cost
+        cols << issue.story
+        cols << issue.demo
+        cols << issue.cost
         cols = "| " + cols.join(" | ") + " |"
       end
     end # class Pbl
@@ -143,6 +143,11 @@ module Octaccord
         "[##{@issue.number}](../#{type}/#{@issue.number} \"#{@issue.title}\")"
       end
 
+      def plain_link
+        type = if @issue.pull_request then "pull" else "issues" end
+        "[##{@issue.number}](../#{type}/#{@issue.number})"
+      end
+
       def comments
         # https://github.com/octokit/octokit.rb#uri-templates
         comments = []
@@ -166,7 +171,37 @@ module Octaccord
         if @issue.milestone then "_#{@issue.milestone.title}_" else nil end
       end
 
+      def story
+        extract_section(@issue.body, "Story")
+      end
+
+      def demo
+        extract_section(@issue.body, "Demo")
+      end
+
+      def cost
+        extract_section(@issue.body, "Cost")
+      end
+
       private
+      def extract_section(lines, heading)
+        in_section, body = false, ""
+        regexp_in  = /^(\#+)\s+#{heading}/
+        regexp_out = nil
+
+        lines.split(/\r?\n/).each do |line|
+          if regexp_in.match(line)
+            level, in_section = $1.length, true
+            regexp_out = /^\#{#{level}}\s+/
+            next
+          end
+
+          in_section = false if in_section and regexp_out.match(line)
+          body << line + "\n" if in_section
+        end
+        return body.to_s.gsub(/\r?\n/, ' ')
+      end
+
       def adjust_indent(body)
         new_body = ""
         body.split(/\r?\n/).each do |line|
