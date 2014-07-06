@@ -50,12 +50,12 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
-  ## Command: update-issues
+  ## Command: update_issues
   ################################################################
-  desc "update-issue num...", "Update issues"
+  desc "update_issues num...", "Update issues"
 
   long_desc <<-LONGDESC
-    update-issue num...
+    update_issues num...
   LONGDESC
 
   method_option :labels, :desc => "Set labels to issues"
