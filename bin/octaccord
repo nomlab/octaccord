@@ -45,14 +45,77 @@ class OctaccordCLI < Thor
   method_option :format, :desc => "Set printing format (pbl, list, table)"
 
   def scan(repos, range = :all)
-    config = Pit.get("github.com", :require => {
-      "login"    => "Your login name here",
-      "password" => "Your password here"
-    })
-    Octokit.auto_paginate = true
-    client = Octokit::Client.new(:login => config["login"], :password => config["password"])
     Octaccord::Command::Scan.new(client, repos, range, options[:format] || :text)
   end
+
+  ################################################################
+  ## Command: update-issues
+  ################################################################
+  desc "update-issue num...", "Update issues"
+
+  long_desc <<-LONGDESC
+    update-issue num...
+  LONGDESC
+
+  method_option :labels, :desc => "Set labels to issues"
+
+  def update_issues(repos, *issues)
+    Octaccord::Command::UpdateIssues.new(client, repos, issues, **symbolize_keys(options))
+  end
+
+  ################################################################
+  ## patch to insert  setup_global_options
+  ################################################################
+  no_commands do
+    def invoke_command(command, *args)
+      setup_global_options
+      super
+    end
+  end
+
+  ################################################################
+  ## private
+  ################################################################
+  private
+
+  def exit_on_error(&block)
+    begin
+      yield if block_given?
+    rescue Octaccord::ConfigurationError => e
+      STDERR.print "ERROR: #{e.message}.\n"
+      exit 1
+    end
+  end
+
+  attr_reader :client, :config
+
+  def setup_global_options
+    exit_on_error do
+      @config = Pit.get("github.com", :require => {
+        "login"    => "Your login name here",
+        "password" => "Your password here"
+      })
+
+      if options[:debug]
+        $OCTACCORD_DEBUG = true
+        stack = Faraday::RackBuilder.new do |builder|
+          builder.response :logger
+          builder.use Octokit::Response::RaiseError
+          builder.adapter Faraday.default_adapter
+        end
+        Octokit.middleware = stack
+      end
+
+      Octokit.auto_paginate = true
+      @client = Octokit::Client.new(:login    => @config["login"],
+                                    :password => @config["password"])
+    end
+  end
+
+  def symbolize_keys(hash)
+    Hash[hash.map {|k,v| [k.to_sym, v]}]
+  end
+
 end # class OctaccordCLI
 
 command = OctaccordCLI.start(ARGV)
