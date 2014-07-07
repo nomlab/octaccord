@@ -6,12 +6,16 @@ module Octaccord
       case formatter.to_sym
       when :text
         Text.new
+      when :number
+        Number.new
       when :pbl
         Pbl.new
       when :table
         Table.new
       when :list
         List.new
+      when :debug
+        Debug.new
       else
         raise FormatterNameError.new("Unknown format: #{formatter}")
       end
@@ -62,6 +66,28 @@ module Octaccord
         issue.summary
       end
     end # class Text
+
+    class Number < Base
+      private
+
+      def format_frame_header ; ""; end
+      def format_frame_footer ; ""; end
+
+      def format_item(issue)
+        issue.number
+      end
+    end # class Number
+
+    class Debug < Base
+      private
+
+      def format_frame_header ; ""; end
+      def format_frame_footer ; ""; end
+
+      def format_item(issue)
+        "##{issue.number} #{issue.title} labels:#{issue.labels} ms:#{issue.milestone} created_at:#{issue.created_at} updated_at:#{issue.updated_at}"
+      end
+    end # class Debug
 
     class Pbl < Base
       private
@@ -143,6 +169,10 @@ module Octaccord
         "[##{@issue.number}](../#{type}/#{@issue.number} \"#{@issue.title}\")"
       end
 
+      def number
+        "#{@issue.number}"
+      end
+
       def plain_link
         type = if @issue.pull_request then "pull" else "issues" end
         "[##{@issue.number}](../#{type}/#{@issue.number})"
@@ -168,7 +198,15 @@ module Octaccord
       end
 
       def milestone
-        if @issue.milestone then "_#{@issue.milestone.title}_" else nil end
+        if @issue.milestone then "#{@issue.milestone.title}" else nil end
+      end
+
+      def created_at
+        @issue.created_at.localtime
+      end
+
+      def updated_at
+        @issue.updated_at.localtime
       end
 
       def story
