@@ -61,7 +61,7 @@ module Octaccord
       def format_item(issue)
         issue.summary
       end
-    end # class List
+    end # class Text
 
     class Pbl < Base
       private
