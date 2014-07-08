@@ -43,6 +43,7 @@ class OctaccordCLI < Thor
   LONGDESC
 
   method_option :format, :desc => "Set printing format (pbl, list, table)"
+  method_option :type,   :desc => "Set type: pr or issue"
   method_option :search, :desc => "Set search query"
 
   def scan(repos)
