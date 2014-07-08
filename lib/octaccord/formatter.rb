@@ -85,7 +85,10 @@ module Octaccord
       def format_frame_footer ; ""; end
 
       def format_item(issue)
-        "##{issue.number} #{issue.title} labels:#{issue.labels} ms:#{issue.milestone} created_at:#{issue.created_at} updated_at:#{issue.updated_at}"
+        "##{issue.number} #{issue.title} labels:#{issue.labels} ms:#{issue.milestone}" +
+          " created_at:#{issue.created_at}" +
+          " updated_at:#{issue.updated_at}" +
+          " refs:#{issue.references.join(',')}"
       end
     end # class Debug
 
@@ -158,6 +161,10 @@ module Octaccord
 
       def pr
         if @issue.pull_request then ":arrow_upper_left:" else nil end
+      end
+
+      def references
+        @issue.body.scan(/#(\d+)/).map{|d| d.first.to_i}
       end
 
       def summary
