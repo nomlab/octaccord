@@ -196,6 +196,7 @@ module Octaccord
         end
         return comments.join
       end
+
       def title
         if @issue.state == "closed" then "~~#{@issue.title}~~" else @issue.title end
       end

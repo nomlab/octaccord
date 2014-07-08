@@ -23,6 +23,7 @@ module Octaccord
         end
         print formatter.to_s
       end
+
     end # class Scan
   end # module Command
 end # module Octaccord
