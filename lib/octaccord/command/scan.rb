@@ -3,12 +3,12 @@ module Octaccord
     class Scan
       Encoding.default_external = "UTF-8"
 
-      def initialize(client, repos, range = :all, **options)
+      def initialize(client, repos, **options)
         formatter = Octaccord::Formatter.build(formatter: options[:format] || :text)
-        scan(client, repos, range, options[:search], formatter)
+        scan(client, repos, options[:search], formatter)
       end
 
-      def scan(client, repos, range, search, formatter)
+      def scan(client, repos, search, formatter)
         # https://help.github.com/articles/searching-issues
         # or issues = client.list_issues(repos)
         # type:issue means ignore pull request

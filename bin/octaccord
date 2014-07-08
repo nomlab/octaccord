@@ -45,8 +45,8 @@ class OctaccordCLI < Thor
   method_option :format, :desc => "Set printing format (pbl, list, table)"
   method_option :search, :desc => "Set search query"
 
-  def scan(repos, range = :all)
-    Octaccord::Command::Scan.new(client, repos, range, **symbolize_keys(options))
+  def scan(repos)
+    Octaccord::Command::Scan.new(client, repos, **symbolize_keys(options))
   end
 
   ################################################################
