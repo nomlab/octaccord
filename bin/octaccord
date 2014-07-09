@@ -53,10 +53,10 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: update_issues
   ################################################################
-  desc "update_issues num...", "Update issues"
+  desc "update_issues REPOSITORY num...", "Update issues"
 
   long_desc <<-LONGDESC
-    update_issues num...
+    update issues in specified repository
   LONGDESC
 
   method_option :labels, :desc => "Set labels to issues"
