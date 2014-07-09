@@ -36,10 +36,10 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: scan
   ################################################################
-  desc "scan REPOSITORY RANGE", "Scan issues in RANGE"
+  desc "scan REPOSITORY", "Scan issues"
 
   long_desc <<-LONGDESC
-    scan issues in date RANGE.
+    scan issues and print in various formats
   LONGDESC
 
   method_option :format, :desc => "Set printing format (pbl, list, table)"
