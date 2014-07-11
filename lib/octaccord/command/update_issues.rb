@@ -9,7 +9,7 @@ module Octaccord
 
         issues.each do |issue|
           begin
-            response = client.update_issue(repos, issue, title, body, {:labels => labels.split(',')})
+            response = client.ext_update_issue(repos, issue, {:labels => labels.split(',')})
             pp response if options[:debug]
           rescue Octokit::ClientError => e
             STDERR.puts "Error: ##{issue} -- #{e.message.split(' // ').first}"
