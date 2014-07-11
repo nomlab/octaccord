@@ -66,6 +66,22 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: add_collaborator
+  ################################################################
+  desc "add_collaborator REPOSITORY...", "Add collaborator of repository"
+
+  long_desc <<-LONGDESC
+    add users or team members to collaborator of repository
+  LONGDESC
+
+  method_option :users, :desc => "Add users to collaborator of repository"
+  method_option :teams, :desc => "Add team members to collaborator of repository"
+
+  def add_collaborator(repos)
+    Octaccord::Command::AddCollaborator.new(client, repos, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## Command: get_team_members
   ################################################################
   desc "get_team_members ORGANIZATION/TEAM...", "Get team members"
