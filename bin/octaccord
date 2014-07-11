@@ -66,6 +66,19 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: get_team_members
+  ################################################################
+  desc "get_team_members ORGANIZATION/TEAM...", "Get team members"
+
+  long_desc <<-LONGDESC
+    Get team members
+  LONGDESC
+
+  def get_team_members(teams)
+    Octaccord::Command::GetTeamMembers.new(client, teams, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## patch to insert  setup_global_options
   ################################################################
   no_commands do
