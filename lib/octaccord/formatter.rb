@@ -23,7 +23,7 @@ module Octaccord
       end
 
       def <<(issue)
-        @issues << Formatter::Issue.new(issue)
+        @issues << Issue.new(issue)
       end
 
       def to_s
