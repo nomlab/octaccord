@@ -53,7 +53,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: update_issues
   ################################################################
-  desc "update_issues REPOSITORY num...", "Update issues"
+  desc "update_issues REPOSITORY NUM...", "Update issues"
 
   long_desc <<-LONGDESC
     update issues in specified repository
@@ -68,7 +68,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: add_collaborator
   ################################################################
-  desc "add_collaborator REPOSITORY...", "Add collaborator of repository"
+  desc "add_collaborator REPOSITORY", "Add collaborator of repository"
 
   long_desc <<-LONGDESC
     add users or team members to collaborator of repository
@@ -84,7 +84,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: get_team_members
   ################################################################
-  desc "get_team_members ORGANIZATION/TEAM...", "Get team members"
+  desc "get_team_members ORGANIZATION/TEAM", "Get team members"
 
   long_desc <<-LONGDESC
     Get team members
