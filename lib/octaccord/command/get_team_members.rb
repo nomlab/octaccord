@@ -13,6 +13,6 @@ module Octaccord
           puts members
         end
       end
-    end # class Scan
+    end # class GetTeamMembers
   end # module Command
 end # module Octaccord
