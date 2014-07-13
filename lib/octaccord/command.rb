@@ -4,6 +4,7 @@ module Octaccord
     autoload :AddCollaborator, "#{dir}/add_collaborator.rb"
     autoload :GetTEamMembers,  "#{dir}/get_team_members.rb"
     autoload :Scan,            "#{dir}/scan.rb"
+    autoload :Show,            "#{dir}/show.rb"
     autoload :UpdateIssues,    "#{dir}/update_issues.rb"
   end # module Command
 end # module Octaccord

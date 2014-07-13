@@ -95,6 +95,15 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: show
+  ################################################################
+  desc "show REPOSITORY NUM", "Show details of issue #NUM"
+
+  def show(repos, issue)
+    Octaccord::Command::Show.new(client, repos, issue, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## patch to insert  setup_global_options
   ################################################################
   no_commands do
