@@ -1,6 +1,7 @@
 require "octaccord/version"
 require "octaccord/command"
 require "octaccord/formatter"
+require "octaccord/iteration"
 require "extensions"
 
 module Octaccord

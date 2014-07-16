@@ -8,5 +8,6 @@ module Octaccord
     autoload :Scan,            "#{dir}/scan.rb"
     autoload :Show,            "#{dir}/show.rb"
     autoload :UpdateIssues,    "#{dir}/update_issues.rb"
+    autoload :CreateIteration, "#{dir}/create_iteration.rb"
   end # module Command
 end # module Octaccord

@@ -82,6 +82,23 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: create_iteration
+  ################################################################
+  desc "create_iteration REPOSITORY ITERATION_NAME", "make new iteration record"
+
+  long_desc <<-LONGDESC
+    Make new iteration record file from skeleton
+  LONGDESC
+
+  method_option :template, :desc => "set ERB template"
+  method_option :start,    :desc => "start date"
+  method_option :due,      :desc => "due date"
+  method_option :manager,  :desc => "set manager"
+  def create_iteration(repos, iteration_name)
+    Octaccord::Command::CreateIteration.new(client, repos, iteration_name, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## Command: get_team_members
   ################################################################
   desc "get_team_members ORGANIZATION/TEAM", "Get team members"
