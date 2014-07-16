@@ -9,11 +9,13 @@ module Octaccord
             issue = comment.rels[:issue].get.data
             formatter = Octaccord::Formatter.build(formatter: :text)
             formatter << issue
-            print "----------------------------------------------------\n"
-            print "### "
+            print "* "
             print formatter.to_s
-            print "\n"
-            print Formatter::Comment.new(comment).adjust_indent
+            print "  * "
+            lines = Formatter::Comment.new(comment).adjust_indent.split(/\r?\n/)
+            print lines.first.sub(/^#+\s*/, '')
+            print "..." if lines.length > 1
+            print "[>>](#{comment.html_url})"
             print "\n"
           end
           # issue = client.issue(repos, issue_number)

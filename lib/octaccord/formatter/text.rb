@@ -7,7 +7,7 @@ module Octaccord
       def format_frame_footer ; ""; end
 
       def format_item(issue)
-        issue.summary
+        "* " + issue.summary
       end
     end # class Text
   end # module Formatter
