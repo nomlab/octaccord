@@ -1,6 +1,6 @@
 module Octaccord
   module Formatter
-    class Issue
+    class Comment
       def initialize(issue)
         @issue = issue
       end
@@ -96,6 +96,15 @@ module Octaccord
         extract_section(@issue.body, "Cost")
       end
 
+      def adjust_indent
+        new_body = ""
+        @issue.body.split(/\r?\n/).each do |line|
+          line = "#####" + line if line =~ /^\#+/
+          new_body << line + "\n"
+        end
+        return new_body
+      end
+
       private
 
       def extract_section(lines, heading)
@@ -116,15 +125,6 @@ module Octaccord
         return body.to_s.gsub(/\r?\n/, ' ')
       end
 
-      def adjust_indent(body)
-        new_body = ""
-        body.split(/\r?\n/).each do |line|
-          line = "#####" + line if line =~ /^\#+/
-          new_body << line + "\n"
-        end
-        return new_body
-      end
-
-    end # class Issue
+    end # class Comment
   end # module Formatter
 end # module Octaccord

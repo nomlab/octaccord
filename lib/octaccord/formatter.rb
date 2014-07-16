@@ -53,6 +53,7 @@ module Octaccord
     end # class Base
 
     dir = File.dirname(__FILE__) + "/formatter"
+    autoload :Comment,    "#{dir}/comment.rb"
     autoload :Debug,      "#{dir}/debug.rb"
     autoload :List,       "#{dir}/list.rb"
     autoload :Number,     "#{dir}/number.rb"

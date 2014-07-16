@@ -95,6 +95,24 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: info
+  ################################################################
+  desc "info", "Show github remote info"
+
+  def info
+    Octaccord::Command::Info.new(client, **symbolize_keys(options))
+  end
+
+  ################################################################
+  ## Command: label
+  ################################################################
+  desc "label REPOSITORY", "Manipulate labels of issues"
+
+  def label(repos)
+    Octaccord::Command::Label.new(client, repos, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## Command: show
   ################################################################
   desc "show REPOSITORY NUM", "Show details of issue #NUM"
