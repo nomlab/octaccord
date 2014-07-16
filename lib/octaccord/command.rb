@@ -2,7 +2,7 @@ module Octaccord
   module Command
     dir = File.dirname(__FILE__) + "/command"
     autoload :AddCollaborator, "#{dir}/add_collaborator.rb"
-    autoload :GetTEamMembers,  "#{dir}/get_team_members.rb"
+    autoload :GetTeamMembers,  "#{dir}/get_team_members.rb"
     autoload :Info,            "#{dir}/info.rb"
     autoload :Label,           "#{dir}/label.rb"
     autoload :Scan,            "#{dir}/scan.rb"
