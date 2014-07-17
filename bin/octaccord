@@ -123,24 +123,39 @@ class OctaccordCLI < Thor
   desc "server", "Invoked as server"
 
   def filter
-    orig_stdout = $stdout
-    $stdout = StringIO.new
-    replace = false
+    block_finalize = false
+    block_inside   = false
+    block_content  = ""
+    block_argv     = []
 
     while line = STDIN.gets # STDIN.noecho(&:gets)
-      orig_stdout.print line unless replace
-
       if /begin:octaccord (.*)-->/ =~ line
-        replace = true
-        argv = $1.chomp.shellsplit
-        self.class.start(argv)
-        orig_stdout.print $stdout.string
-        $stdout.string = ""
+        block_inside = true
+        block_argv = $1.chomp.shellsplit
+        print line
+        next
       end
 
       if /end:octaccord/ =~ line
-        orig_stdout.print line
-        replace = false
+        orig_stdout = $stdout
+        orig_stdin  = $stdin
+        $stdout = StringIO.new
+        $stdin  = StringIO.new(block_content)
+        self.class.start(block_argv)
+        result = $stdout.string
+        $stdout = orig_stdout
+        $stdin  = orig_stdin
+
+        print result
+        print line
+        block_inside = false
+        next
+      end
+
+      if block_inside
+        block_content << line
+      else
+        print line
       end
     end
   end
