@@ -1,0 +1,86 @@
+<%
+   # setting
+   now         = Time.now.iso8601
+   project     = "nomlab/LastNote"
+   team        = "nomlab/GN"
+   itr.name    = "Itr0097"
+   itr.manager = "yoshinari-nomura"
+   itr.start   = "2014-07-10"
+   itr.due     = "2014-07-30"
+-%>
+[[(<%= itr.prev.name %>)|<%= itr.prev.name %>]] | [[(<%= itr.next.name %>)|<%= itr.next.name %>]] | [[(PBL)|Product-Backlog]]
+
+# <%= itr.name %>: Iteration Record
+
+* Manager: @<%= itr.manager %>
+* Term:    <%= itr.start %>..<%= itr.due %>
+
+## <%= itr.start %> Iteration Plan
+
+* Attendees: <!-- begin:octaccord get_team_members <%= team %> -->
+<!-- end:octaccord -->
+* Pairs: 
+
+### 1. High-Level Objectives
+
+#### :bangbang: [[PBL|Product-Backlog]] と [PBL Issues](../issues?labels=PBL&state=open&sort=updated) を見ながら以下を議論し，ここに **議事録** を残す．
+   * :bangbang: 完成イメージを共有する
+   * :bangbang: Wiki 上で優先順位を入れ替える
+   * :bangbang: 追加や分割すべき項目を議論する
+
+#### :bangbang: 議論の結果に基づいて， PBL Issue を編集する．その際，以下に注意すること．
+   * Wiki のテーブル項目は，優先順位の並べ替えと，Cost の変更だけに限ること
+   * 項目の新規追加や削除は，Issues で行って PBL ラベルを付与すること． octaccord が Wiki のテーブルに自動で反映する．
+   * 新規 PBL Issue には，Story, Demo, Tasks の項目を記述すること．
+   * 個別の Issue に関する議論は，ここに書かずに，Issue のコメントとして記述すること．
+
+#### :bangbang: _ここで，octaccord を使って， PBL Wiki を更新しておく_
+
+#### :bangbang: 上記が終わったら，本イテレーションで取り組む PBL Issue を以下に箇条書で並べる．(#番号だけでよい)
+* #1
+* #2
+* #3
+
+:bangbang: _ここで，octaccord を使って，上記項目にタイトル等を補完させる_
+:bangbang: _さらに，octaccord を使って，上記 PBL Issue から Tasks 項目を抜き出して，Task Issue を自動的に作成させる_
+
+### 2. Work Item Assignments
+
+この時点で，PBL Issue には Story と Tasks が付いており，これに基づいて自動的に Task Issue が生成されている．
+
+<!-- begin:octaccord scan <%= project %> --search="label:<%= itr.name %>" -->
+* [#106](../issues/106) Create I'll be back page
+* [#105](../issues/105) Restful Member **okada-takuya** _enhancement_
+* [#101](../issues/101) Show reporter name at MLarchive **ichikawa85** _enhancement_
+* [#100](../issues/100) 既存の意見・要望の確認ページがわかりにくい **ichikawa85** _enhancement_
+
+<!-- end:octaccord -->
+
+特定の人が一方的に issue の Asigned を決めることはなく，自主的に決めるのが理想．
+
+### 3. Evaluation Criteria
+
+:bangbang: イテレーションの終了条件を明確化しておく．
+* コードレビューの完了
+* 全テストの完成と通過
+* デモの実施
+
+## <%= itr.due %> Iteration Review
+
+* Attendees: <!-- begin:octaccord get_team_members <%= team %> -->
+<!-- end:octaccord -->
+
+できあがったプロダクトを見ながら，リリース可能かどうかを判断する会議．
+* 完了できなかった，プロダクトバックログについて担当者が説明する
+* プロダクトバックログに追加すべき項目の有無について議論する
+* プロジェクトを進めるうえで問題となる項目について議論する
+* 現在の進捗をふまえて，リリース日や完了日を予測する
+
+### 1. Issue and Pull Request Review
+
+Issues を見ながら，Issues にコメントを付ける．議事は，Issues のコメントとして付ける．
+本 Wiki には， octaccord がコメントを追加する．
+
+#### Issues bound to <%= itr.name %>:
+<!-- begin:octaccord comments <%= project %> --since="<%= (Time.now - 3600 * 12).iso8601%>" --before="<%= Time.now.iso8601 %>"-->
+<!-- end:octaccord -->
