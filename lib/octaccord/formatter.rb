@@ -41,11 +41,11 @@ module Octaccord
       end
 
       def format_frame_header
-        "<!-- begin:octaccord #{self.class.name} -->\n"
+        ""
       end
 
       def format_frame_footer
-        "\n<!-- end:octaccord #{self.class.name} -->\n"
+        ""
       end
 
       def format_header ;""; end

@@ -3,8 +3,10 @@ module Octaccord
     class List < Base
       private
 
-      def format_item(issue)
-        headline = "##### #{issue.link} #{issue.status} #{issue.title}\n#{issue.comments}"
+      def format_item(issue, options = {})
+        header = options[:header] || "*"
+        comments = if options[:include_comments] then "\n" + issue.comments else "" end
+        headline = "#{header} #{issue.link} #{issue.status} #{issue.title}#{comments}"
       end
     end # class List
   end # module Formatter

@@ -9,7 +9,7 @@ module Octaccord
         else
           content = gets(nil)
         end
-        template = ERB.new(content)
+        template = ERB.new(content, nil, "-")
         options.delete(:template)
         itr = Octaccord::Iteration.new(name: name, **options)
         puts template.result(binding)

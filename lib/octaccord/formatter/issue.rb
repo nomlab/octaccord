@@ -7,7 +7,7 @@ module Octaccord
 
       def status
         return ":parking:" if labels =~ /PBL/
-        return ":white_check_mark:" if @issue.state == "closed"
+        # return ":white_check_mark:" if @issue.state == "closed"
         return ":arrow_upper_left:" if @issue.pull_request
         return avatar if @issue.assignee
         days = ((Time.now - @issue.updated_at) / (24*3600)).to_i

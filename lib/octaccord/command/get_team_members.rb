@@ -10,7 +10,7 @@ module Octaccord
           team_id = response.select{|t| t.name == team_name}.first.id
           response = client.team_members(team_id)
           members = response.map(&:login)
-          puts members
+          puts members.join(', ')
         end
       end
     end # class GetTeamMembers

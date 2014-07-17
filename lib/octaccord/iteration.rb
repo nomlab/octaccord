@@ -1,6 +1,6 @@
 module Octaccord
   class Iteration
-    attr_reader :start, :due, :manager
+    attr_accessor :name, :start, :due, :manager
 
     def initialize(name: name, manager: manager, start: start, due: due)
       if /([^\d]+)(\d+)/ =~ name
@@ -14,11 +14,11 @@ module Octaccord
     end
 
     def prev
-      self.class.new(name: name(+1), manager: @manager, start: @start, due: @due)
+      self.class.new(name: name(-1), manager: @manager, start: @start, due: @due)
     end
 
     def next
-      self.class.new(name: name(-1), manager: @manager, start: @start, due: @due)
+      self.class.new(name: name(+1), manager: @manager, start: @start, due: @due)
     end
   end # class Iteration
 end # module Octaccord
