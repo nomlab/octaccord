@@ -6,6 +6,7 @@ module Octaccord
     autoload :GetTeamMembers,  "#{dir}/get_team_members.rb"
     autoload :Info,            "#{dir}/info.rb"
     autoload :Label,           "#{dir}/label.rb"
+    autoload :Link,            "#{dir}/link.rb"
     autoload :Scan,            "#{dir}/scan.rb"
     autoload :Show,            "#{dir}/show.rb"
     autoload :UpdateIssues,    "#{dir}/update_issues.rb"

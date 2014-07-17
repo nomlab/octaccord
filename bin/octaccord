@@ -198,6 +198,15 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: link
+  ################################################################
+  desc "link", "Insert link to markdown file"
+
+  def link
+    Octaccord::Command::Link.new($stdin)
+  end
+
+  ################################################################
   ## Command: show
   ################################################################
   desc "show REPOSITORY NUM", "Show details of issue #NUM"
