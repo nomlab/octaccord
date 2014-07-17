@@ -13,6 +13,8 @@ require 'rubygems'
 require 'bundler/setup'
 Bundler.require
 
+require "time"
+require "shellwords"
 require "pp"
 
 Encoding.default_external="UTF-8"
@@ -113,6 +115,34 @@ class OctaccordCLI < Thor
   method_option :manager,  :desc => "set manager"
   def create_iteration(repos, iteration_name)
     Octaccord::Command::CreateIteration.new(client, repos, iteration_name, **symbolize_keys(options))
+  end
+
+  ################################################################
+  ## Command: filter
+  ################################################################
+  desc "server", "Invoked as server"
+
+  def filter
+    orig_stdout = $stdout
+    $stdout = StringIO.new
+    replace = false
+
+    while line = STDIN.gets # STDIN.noecho(&:gets)
+      orig_stdout.print line unless replace
+
+      if /begin:octaccord (.*)-->/ =~ line
+        replace = true
+        argv = $1.chomp.shellsplit
+        self.class.start(argv)
+        orig_stdout.print $stdout.string
+        $stdout.string = ""
+      end
+
+      if /end:octaccord/ =~ line
+        orig_stdout.print line
+        replace = false
+      end
+    end
   end
 
   ################################################################
