@@ -82,6 +82,23 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: comments
+  ################################################################
+  desc "comments REPOSITORY", "list comments created in a period of time"
+
+  long_desc <<-LONGDESC
+    list comments created in a period of time
+  LONGDESC
+
+  method_option :since,  :required => true, :desc => "Only comments updated at or after this time"
+  method_option :before,                    :desc => "Only comments updated at or after this time"
+  def comments(repos)
+    since  = Time.iso8601(options[:since])
+    before = if options[:before] then Time.iso8601(options[:before]) else Time.now.iso8601 end
+    Octaccord::Command::Comments.new(client, repos, since, before)
+  end
+
+  ################################################################
   ## Command: create_iteration
   ################################################################
   desc "create_iteration REPOSITORY ITERATION_NAME", "make new iteration record"
