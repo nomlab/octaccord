@@ -47,9 +47,15 @@ class OctaccordCLI < Thor
   method_option :format, :desc => "Set printing format (debug,list,number,pbl,table,text)"
   method_option :type,   :desc => "Set type: pr or issue"
   method_option :search, :desc => "Set search query"
+  method_option :topology, :desc => "Set information file name for topological sort"
 
   def scan(repos)
-    Octaccord::Command::Scan.new(client, repos, **symbolize_keys(options))
+    if options[:topology] == "-"
+      orig_text = $stdin.gets(nil)
+    elsif options[:topology]
+      orig_text = File.open(options[:topology]).gets(nil)
+    end
+    Octaccord::Command::Scan.new(client, repos, orig_text, **symbolize_keys(options))
   end
 
   ################################################################

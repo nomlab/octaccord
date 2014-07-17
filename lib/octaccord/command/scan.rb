@@ -3,14 +3,14 @@ module Octaccord
     class Scan
       Encoding.default_external = "UTF-8"
 
-      def initialize(client, repos, **options)
+      def initialize(client, repos, replace = nil, **options)
         formatter = Octaccord::Formatter.build(formatter: options[:format] || :text)
         if query = options[:search]
           items = search(client, repos, query, formatter)
         else
           items = scan(client, repos, options[:type], formatter)
         end
-        format(items, formatter)
+        format(items, formatter, replace)
       end
 
       def search(client, repos, query, formatter)
@@ -31,10 +31,11 @@ module Octaccord
         end
       end
 
-      def format(issues, formatter)
+      def format(issues, formatter, replace = nil)
         issues.each do |issue|
           formatter << issue
         end
+        formatter.order(replace) if replace
         print formatter.to_s
       end
 
