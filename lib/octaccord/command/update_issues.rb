@@ -4,13 +4,20 @@ module Octaccord
       Encoding.default_external = "UTF-8"
 
       def initialize(client, repos, issues, **options)
-        labels = options[:labels]
-        title, body = nil, nil # not update
-
         issues.each do |issue|
+          number = issue.to_i
           begin
-            response = client.ext_update_issue(repos, issue, {:labels => labels.split(',')})
-            pp response if options[:debug]
+            if label = options[:add_label]
+              response = client.add_labels_to_an_issue(repos, number, [label])
+              pp response if options[:debug]
+              puts "Add label #{label} to ##{number}."
+            end
+
+            if label = options[:remove_label]
+              response = client.remove_label(repos, number, label)
+              pp response if options[:debug]
+              puts "Remove label #{label} fromm ##{number}."
+            end
           rescue Octokit::ClientError => e
             STDERR.puts "Error: ##{issue} -- #{e.message.split(' // ').first}"
           end

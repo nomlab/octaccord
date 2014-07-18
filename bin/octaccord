@@ -67,7 +67,8 @@ class OctaccordCLI < Thor
     update issues in specified repository
   LONGDESC
 
-  method_option :labels, :desc => "Set labels to issues"
+  method_option "add-label",    :desc => "Add a LABEL to issues", :banner => "LABEL"
+  method_option "remove-label", :desc => "Remove a LABEL from issues", :banner => "LABEL"
 
   def update_issues(repos, *issues)
     Octaccord::Command::UpdateIssues.new(client, repos, issues, **symbolize_keys(options))
@@ -265,7 +266,7 @@ class OctaccordCLI < Thor
   end
 
   def symbolize_keys(hash)
-    Hash[hash.map {|k,v| [k.to_sym, v]}]
+    Hash[hash.map {|k,v| [k.to_s.gsub('-', '_').to_sym, v]}]
   end
 
 end # class OctaccordCLI
