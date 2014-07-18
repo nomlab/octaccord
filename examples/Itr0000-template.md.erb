@@ -1,74 +1,68 @@
 <%
    # setting
-   now         = Time.now.iso8601
-   project     = "nomlab/LastNote"
-   team        = "nomlab/GN"
-   itr.name    = "Itr0097"
-   itr.manager = "yoshinari-nomura"
-   itr.start   = "2014-07-10"
-   itr.due     = "2014-07-30"
+   team_class = Struct.new(:name, :members)
+   team = team_class.new("nomlab/GN", ["yoshinari-nomura", "murata1224"])
+   now             = Time.now.iso8601
+   repos         = "nomlab/LastNote"
 -%>
-[[(<%= itr.prev.name %>)|<%= itr.prev.name %>]] | [[(<%= itr.next.name %>)|<%= itr.next.name %>]] | [[(PBL)|Product-Backlog]]
+[[(<%= itr.prev.name %>)|<%= itr.prev.name %>]] | [[(<%= itr.next.name %>)|<%= itr.next.name %>]] | [[(PBL)|Product-Backlog]] | [PBL Issues](../issues?labels=PBL&state=open&sort=updated)
 
-# <%= itr.name %>: Iteration Record
+# <%= itr.name %> Iteration Record
 
 * Manager: @<%= itr.manager %>
 * Term:    <%= itr.start %>..<%= itr.due %>
 
-## <%= itr.start %> Iteration Plan
+## <%= itr.start_date %> Iteration Plan
 
-* Attendees: <!-- begin:octaccord get_team_members <%= team %> -->
-<!-- end:octaccord -->
-* Pairs: 
+* Attendees: <%= team.members.join(', ') %>
+* Pairs: <%= team.members.join(', ') %>
 
 ### 1. High-Level Objectives
 
-#### :bangbang: [[PBL|Product-Backlog]] と [PBL Issues](../issues?labels=PBL&state=open&sort=updated) を見ながら以下を議論し，ここに **議事録** を残す．
-   * :bangbang: 完成イメージを共有する
-   * :bangbang: Wiki 上で優先順位を入れ替える
-   * :bangbang: 追加や分割すべき項目を議論する
+[[PBL|Product-Backlog]] と [PBL Issues](../issues?labels=PBL&state=open&sort=updated) を見ながら以下について議論した．
 
-#### :bangbang: 議論の結果に基づいて， PBL Issue を編集する．その際，以下に注意すること．
-   * Wiki のテーブル項目は，優先順位の並べ替えと，Cost の変更だけに限ること
-   * 項目の新規追加や削除は，Issues で行って PBL ラベルを付与すること． octaccord が Wiki のテーブルに自動で反映する．
-   * 新規 PBL Issue には，Story, Demo, Tasks の項目を記述すること．
-   * 個別の Issue に関する議論は，ここに書かずに，Issue のコメントとして記述すること．
+#### 完成イメージと本イテレーションの方針について
 
-#### :bangbang: _ここで，octaccord を使って， PBL Wiki を更新しておく_
+* blah blah ........
+  * blah blah ........
+* blah blah ........
 
-#### :bangbang: 上記が終わったら，本イテレーションで取り組む PBL Issue を以下に箇条書で並べる．(#番号だけでよい)
-* #1
-* #2
-* #3
+#### [[Product Backlog|Product-Backlog]] の調整について
 
-:bangbang: _ここで，octaccord を使って，上記項目にタイトル等を補完させる_
-:bangbang: _さらに，octaccord を使って，上記 PBL Issue から Tasks 項目を抜き出して，Task Issue を自動的に作成させる_
+* #10 は，Cost を 3 から 8 に上げるべき．なぜなら blah blah ........
+* #5 よりも #6 を優先したほうがよい．なぜなら blah blah ........
+* blah blah ........
+
+#### 本イテレーションで取り組む PBL Issue について
+
+* 議論の結果，[[Product Backlog|Product-Backlog]] を調整して優先順位の並べ替えを行った．
+* 取り組むべき PBL Issue に PBL と <% itr.name %> ラベルを付与し，それらの description 欄に Story, Demo, Cost の項目を記述した．
+* 個々の PBL Issue に関する技術的議論は，その Issue のコメント欄に記述した．
+* 以下，[PBL Issues](../issues?labels=PBL&state=open&sort=updated) から octaccord によって自動抽出した結果を示す．
+
+<!-- begin:octaccord scan <%= repos %> --search="label:PBL label:<%= itr.name %>" --format=pbl --topology=Product-Backlog.md -->
+<!-- end:octaccord -->
+
+#### 本議論中で更新された Issue コメント一覧
+
+<!-- begin:octaccord comments <%= repos %> --since="<%= itr.start %>" --before="<%= now %>"-->
+<!-- end:octaccord -->
 
 ### 2. Work Item Assignments
 
-この時点で，PBL Issue には Story と Tasks が付いており，これに基づいて自動的に Task Issue が生成されている．
-
-<!-- begin:octaccord scan <%= project %> --search="label:<%= itr.name %>" -->
-* [#106](../issues/106) Create I'll be back page
-* [#105](../issues/105) Restful Member **okada-takuya** _enhancement_
-* [#101](../issues/101) Show reporter name at MLarchive **ichikawa85** _enhancement_
-* [#100](../issues/100) 既存の意見・要望の確認ページがわかりにくい **ichikawa85** _enhancement_
-
+<!-- begin:octaccord scan <%= repos %> --search="label:<%= itr.name %> -label:PBL" --format=list -->
 <!-- end:octaccord -->
-
-特定の人が一方的に issue の Asigned を決めることはなく，自主的に決めるのが理想．
 
 ### 3. Evaluation Criteria
 
-:bangbang: イテレーションの終了条件を明確化しておく．
-* コードレビューの完了
 * 全テストの完成と通過
-* デモの実施
+* コードレビューの完了
+* 全ての PBL Issue について，デモを実施
 
-## <%= itr.due %> Iteration Review
+## <%= itr.due_date %> Iteration Review
 
-* Attendees: <!-- begin:octaccord get_team_members <%= team %> -->
-<!-- end:octaccord -->
+* Term: <%= itr.due %>
+* Attendees: <%= team.members.join(', ') %>
 
 できあがったプロダクトを見ながら，リリース可能かどうかを判断する会議．
 * 完了できなかった，プロダクトバックログについて担当者が説明する
@@ -81,6 +75,7 @@
 Issues を見ながら，Issues にコメントを付ける．議事は，Issues のコメントとして付ける．
 本 Wiki には， octaccord がコメントを追加する．
 
-#### Issues bound to <%= itr.name %>:
-<!-- begin:octaccord comments <%= project %> --since="<%= (Time.now - 3600 * 12).iso8601%>" --before="<%= Time.now.iso8601 %>"-->
+#### 本議論中で更新された Issue コメント一覧
+
+<!-- begin:octaccord comments <%= repos %> --since="<%= itr.due %>" --before="<%= now %>"-->
 <!-- end:octaccord -->
