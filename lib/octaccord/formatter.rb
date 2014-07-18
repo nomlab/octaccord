@@ -1,3 +1,13 @@
+require "tsort"
+
+class Hash
+  include TSort
+  alias tsort_each_node each_key
+  def tsort_each_child(node, &block)
+    fetch(node).each(&block)
+  end
+end
+
 module Octaccord
   module Formatter
 
@@ -24,6 +34,18 @@ module Octaccord
 
       def <<(issue)
         @issues << Issue.new(issue)
+      end
+
+      def tsort
+        graph = {}
+        @issues.each do |issue|
+          graph[issue.number.to_i] ||= []
+          issue.references.each do |parent|
+            graph[parent] ||= []
+            graph[parent] << issue.number.to_i
+          end
+        end
+        graph.tsort
       end
 
       def order(numbers)
