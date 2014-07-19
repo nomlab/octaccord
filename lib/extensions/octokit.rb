@@ -1,3 +1,5 @@
+require "octokit"
+
 module Octokit
   class Client
     module Issues
