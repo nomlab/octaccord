@@ -6,3 +6,4 @@ gem "octokit"
 gem "pit"
 gem "thor"
 gem "rugged"
+gem 'faraday-http-cache'

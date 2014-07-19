@@ -19,6 +19,28 @@ require "pp"
 
 Encoding.default_external="UTF-8"
 
+require "dbm"
+class FileStore
+  CACHE_FILE = "#{ENV["HOME"]}/.cache/octaccord/http_cache"
+
+  def initialize
+    @cache = DBM.open(CACHE_FILE, 0666)
+  end
+
+  def read(key)
+    if value = @cache[key]
+      STDERR.puts "HIT #{key}"
+    else
+      STDERR.puts "MISS #{key}"
+    end
+    value
+  end
+
+  def write(key, value)
+    @cache[key] = value
+  end
+end
+
 class OctaccordCLI < Thor
   check_unknown_options!
   package_name 'Octaccord'
@@ -245,24 +267,31 @@ class OctaccordCLI < Thor
 
   def setup_global_options
     exit_on_error do
-      @config = Pit.get("github.com", :require => {
+      @config ||= Pit.get("github.com", :require => {
         "login"    => "Your login name here",
         "password" => "Your password here"
       })
 
       if options[:debug]
         $OCTACCORD_DEBUG = true
-        stack = Faraday::RackBuilder.new do |builder|
+        @stack ||= Faraday::RackBuilder.new do |builder|
           builder.response :logger
           builder.use Octokit::Response::RaiseError
           builder.adapter Faraday.default_adapter
         end
-        Octokit.middleware = stack
+      else
+        @store ||= FileStore.new
+        @stack ||= Faraday::RackBuilder.new do |builder|
+          builder.use Faraday::HttpCache, shared_cache: false, store: @store, serializer: YAML
+          builder.use Octokit::Response::RaiseError
+          builder.adapter Faraday.default_adapter
+        end
       end
 
+      Octokit.middleware = @stack
       Octokit.auto_paginate = true
-      @client = Octokit::Client.new(:login    => @config["login"],
-                                    :password => @config["password"])
+      @client ||= Octokit::Client.new(:login    => @config["login"],
+                                      :password => @config["password"])
     end
   end
 
