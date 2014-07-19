@@ -3,6 +3,10 @@ module Octaccord
     class List < Base
       private
 
+      def format_frame_footer
+        "\n"
+      end
+
       def format_item(issue, options = {})
         header = options[:header] || "*"
         comments = if options[:include_comments] then "\n" + issue.comments else "" end
