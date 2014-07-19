@@ -15,15 +15,19 @@ module Octaccord
         return ":grey_question:"
       end
 
+      def user
+        User.new(@resource.user) if @resource.user
+      end
+
+      def assignee
+        User.new(@resource.assignee) if @resource.assignee
+      end
+
       def avatar
         if @resource.assignee
-          return "![#{@resource.assignee.login}](#{@resource.assignee.avatar_url}s=20)"
-        else
-          return ":grey_question:"
-          octcat = "https://assets-cdn.github.com/images/gravatars/gravatar-user-420.png"
-          gravatar = "https://www.gravatar.com/avatar/00000000000000000000000000000000"
-          return "![not assigned](#{gravatar}?d=#{URI.encode_www_form_component(octcat)}&r=x&s=10)"
+          return self.assignee.avatar
         end
+        return ":grey_question:"
       end
 
       def pr

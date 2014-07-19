@@ -96,6 +96,7 @@ module Octaccord
     autoload :Number,     "#{dir}/number.rb"
     autoload :Pbl,        "#{dir}/pbl.rb"
     autoload :Table,      "#{dir}/table.rb"
+    autoload :User,       "#{dir}/user.rb"
     autoload :Text,       "#{dir}/text.rb"
 
     autoload :Issue,      "#{dir}/issue.rb"

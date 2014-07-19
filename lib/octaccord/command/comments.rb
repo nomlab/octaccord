@@ -36,18 +36,13 @@ module Octaccord
       end
 
       def format_comment(comment)
-        lines = Formatter::Comment.new(comment).adjust_indent.split(/\r?\n/)
-        string = "  * "
-        string << lines.first.sub(/^#+\s*/, '')
-        string << "..." if lines.length > 1
-        string << "[...](#{comment.html_url})"
-        string << "\n"
+        comment = Formatter::Comment.new(comment)
+        "  * #{comment.summary} #{comment.link(text: "...")}\n"
       end
 
       def format_issue(issue)
-        formatter = Octaccord::Formatter.build(formatter: :list)
-        formatter << issue
-        formatter.to_s
+        issue = Formatter::Issue.new(issue)
+        return "* #{issue.link} #{issue.status} #{issue.title}\n"
       end
 
     end # class Comments

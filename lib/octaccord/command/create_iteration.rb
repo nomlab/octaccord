@@ -12,8 +12,8 @@ module Octaccord
         template = ERB.new(content, nil, "-")
         options.delete(:template)
 
-        # binding itr, repos, team, team
-        itr = Octaccord::Iteration.new(name: name, **options)
+        # binding itr, repos
+        itr = Octaccord::Iteration.new(client: client, name: name, repository: repos, **options)
         puts template.result(binding)
       end
     end # class CreateIteration
