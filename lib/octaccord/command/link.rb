@@ -5,7 +5,7 @@ module Octaccord
 
       def initialize(stdin)
         while line = stdin.gets
-          puts line.sub(/\#(\d+)/, '[#\1](../issues/\1)')
+          puts line.gsub(/(^|[^\[])\#(\d+)/, '\1[#\2](../issues/\2)')
         end
       end
     end # class Link
