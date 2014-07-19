@@ -103,7 +103,7 @@ class OctaccordCLI < Thor
   method_option :before,                    :desc => "Only comments updated at or after this time"
   def comments(repos)
     since  = Time.iso8601(options[:since])
-    before = if options[:before] then Time.iso8601(options[:before]) else Time.now.iso8601 end
+    before = if options[:before] then Time.iso8601(options[:before]) else Time.now end
     Octaccord::Command::Comments.new(client, repos, since, before)
   end
 
