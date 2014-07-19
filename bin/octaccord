@@ -99,8 +99,8 @@ class OctaccordCLI < Thor
     list comments created in a period of time
   LONGDESC
 
-  method_option :since,  :required => true, :desc => "Only comments updated at or after this time"
-  method_option :before,                    :desc => "Only comments updated at or after this time"
+  method_option :since,  :banner => "ISO8601_DATETIME", :desc => "Only comments updated at or after this time", :required => true
+  method_option :before, :banner => "ISO8601_DATETIME", :desc => "Only comments updated at or before this time"
   def comments(repos)
     since  = Time.iso8601(options[:since])
     before = if options[:before] then Time.iso8601(options[:before]) else Time.now end
