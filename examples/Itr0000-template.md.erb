@@ -1,21 +1,19 @@
 <%
-   # setting
-   team_class = Struct.new(:name, :members)
-   team = team_class.new("nomlab/GN", ["yoshinari-nomura", "murata1224"])
-   now             = Time.now.iso8601
-   repos         = "nomlab/LastNote"
+   now     = Time.now.iso8601
+   repos   = itr.repository
+   members = itr.members.sort.map{|m| "@" + m}.join(", ")
 -%>
 [[(<%= itr.prev.name %>)|<%= itr.prev.name %>]] | [[(<%= itr.next.name %>)|<%= itr.next.name %>]] | [[(PBL)|Product-Backlog]] | [PBL Issues](../issues?labels=PBL&state=open&sort=updated)
 
 # <%= itr.name %> Iteration Record
 
 * Manager: @<%= itr.manager %>
-* Term:    <%= itr.start %>..<%= itr.due %>
+* Term: <%= itr.start.strftime("%Y-%m-%d %H:%M") %>..<%= itr.due.strftime("%Y-%m-%d %H:%M") %>
 
-## <%= itr.start_date %> Iteration Plan
+## <%= itr.start.strftime("%Y-%m-%d") %> Iteration Plan
 
-* Attendees: <%= team.members.join(', ') %>
-* Pairs: <%= team.members.join(', ') %>
+* Attendees: <%= members %>
+* Pairs: <%= members %>
 
 ### 1. High-Level Objectives
 
@@ -29,8 +27,8 @@
 
 #### [[Product Backlog|Product-Backlog]] の調整について
 
-* #10 は，Cost を 3 から 8 に上げるべき．なぜなら blah blah ........
-* #5 よりも #6 を優先したほうがよい．なぜなら blah blah ........
+* #17 は，Cost を 5 から 8 に上げるべき．なぜなら blah blah ........
+* #17 よりも #38 を優先したほうがよい．なぜなら blah blah ........
 * blah blah ........
 
 #### 本イテレーションで取り組む PBL Issue について
@@ -45,7 +43,7 @@
 
 #### 本議論中で更新された Issue コメント一覧
 
-<!-- begin:octaccord comments <%= repos %> --since="<%= itr.start %>" --before="<%= now %>"-->
+<!-- begin:octaccord comments <%= repos %> --since="<%= itr.start.iso8601 %>" --before="<%= (itr.start + 3600 * 2).iso8601 %>"-->
 <!-- end:octaccord -->
 
 ### 2. Work Item Assignments
@@ -59,10 +57,9 @@
 * コードレビューの完了
 * 全ての PBL Issue について，デモを実施
 
-## <%= itr.due_date %> Iteration Review
+## <%= itr.due.strftime("%Y-%m-%d") %> Iteration Review
 
-* Term: <%= itr.due %>
-* Attendees: <%= team.members.join(', ') %>
+* Attendees: <%= members %>
 
 できあがったプロダクトを見ながら，リリース可能かどうかを判断する会議．
 * 完了できなかった，プロダクトバックログについて担当者が説明する
@@ -77,5 +74,5 @@ Issues を見ながら，Issues にコメントを付ける．議事は，Issues
 
 #### 本議論中で更新された Issue コメント一覧
 
-<!-- begin:octaccord comments <%= repos %> --since="<%= itr.due %>" --before="<%= now %>"-->
+<!-- begin:octaccord comments <%= repos %> --since="<%= itr.due.iso8601 %>" --before="<%= (itr.due + 3600 * 2).iso8601 %>"-->
 <!-- end:octaccord -->
