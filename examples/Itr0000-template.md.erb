@@ -1,3 +1,18 @@
+:bangbang: This Iteration Record is created by octaccord from examples/Itr0000-template.md.erb
+
+Exampe:
+```sh
+$ octaccord create_iteration nomlab/LastNote Itr0095 \
+      --team="nomlab/GN" \
+      --start="2014-07-03T16:30:00+09:00" \
+      --due="2014-07-16T13:00:00+09:00" \
+      --manager="okada-takuya" \
+      --template=../octaccord/examples/Itr0000-template.md.erb \
+   | octaccord filter > Itr0095-sample.md
+
+$ octaccord filter < Product-Backlog.md > tmp.md
+$ mv tmp.md Product-Backlog.md
+```
 <%
    now     = Time.now.iso8601
    repos   = itr.repository
