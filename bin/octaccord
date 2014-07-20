@@ -185,7 +185,7 @@ class OctaccordCLI < Thor
       if block_inside
         block_content << line
       else
-        print line
+        print line.gsub(/(^|[^\[])\#(\d+)/, '\1[#\2](../issues/\2)')
       end
     end
   end
@@ -219,15 +219,6 @@ class OctaccordCLI < Thor
 
   def label(repos)
     Octaccord::Command::Label.new(client, repos, **symbolize_keys(options))
-  end
-
-  ################################################################
-  ## Command: link
-  ################################################################
-  desc "link", "Insert link to markdown file"
-
-  def link
-    Octaccord::Command::Link.new($stdin)
   end
 
   ################################################################
