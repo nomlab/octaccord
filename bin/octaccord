@@ -29,9 +29,10 @@ class FileStore
 
   def read(key)
     if value = @cache[key]
-      STDERR.puts "HIT #{key}"
+      STDERR.puts "HIT #{key}" if $OCTACCORD_DEBUG
+
     else
-      STDERR.puts "MISS #{key}"
+      STDERR.puts "MISS #{key}" if $OCTACCORD_DEBUG
     end
     value
   end
@@ -263,20 +264,13 @@ class OctaccordCLI < Thor
         "password" => "Your password here"
       })
 
-      if options[:debug]
-        $OCTACCORD_DEBUG = true
-        @stack ||= Faraday::RackBuilder.new do |builder|
-          builder.response :logger
-          builder.use Octokit::Response::RaiseError
-          builder.adapter Faraday.default_adapter
-        end
-      else
-        @store ||= FileStore.new
-        @stack ||= Faraday::RackBuilder.new do |builder|
-          builder.use Faraday::HttpCache, shared_cache: false, store: @store, serializer: YAML
-          builder.use Octokit::Response::RaiseError
-          builder.adapter Faraday.default_adapter
-        end
+      $OCTACCORD_DEBUG = true if options[:debug]
+      @store ||= FileStore.new
+      @stack ||= Faraday::RackBuilder.new do |builder|
+        builder.response :logger if options[:debug]
+        builder.use Faraday::HttpCache, shared_cache: false, store: @store, serializer: YAML
+        builder.use Octokit::Response::RaiseError
+        builder.adapter Faraday.default_adapter
       end
 
       Octokit.middleware = @stack
