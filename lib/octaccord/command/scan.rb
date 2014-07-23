@@ -22,20 +22,30 @@ module Octaccord
         query << " type:issue" unless query =~ /type:/
         STDERR.puts "Query: #{query}" if $OCTACCORD_DEBUG
 
-        if query =~ /(-)?refers:\(([^)]+)\)/
-          negop, subquery = $1, $2
-          query = query.sub(/(-)?refers:\([^)]+\)/, "")
+        if query =~ /(-)?(refers|refered):\(([^)]*)\)/
+          negop, reftype, subquery = $1, $2, $3
+          query = query.sub(/-?(refers|refered):\([^)]*\)/, "")
+
           subquery << " repo:#{repos}"
           subquery << " state:open" unless subquery =~ /state:/
           subquery << " type:issue" unless subquery =~ /type:/
-          puts "SUBQUERY: #{subquery}" if $OCTACCORD_DEBUG
+
+          if $OCTACCORD_DEBUG
+            STDERR.puts "SUBQUERY: #{subquery}"
+            STDERR.puts "QUERY: #{query}"
+          end
+
           subitems = client.search_issues(subquery).items
-          puts "QUERY: #{query}" if $OCTACCORD_DEBUG
           issues = client.search_issues(query).items
-          refers(subitems, issues, (negop == "-"))
-        else
-          issues = client.search_issues(query).items
+
+          if reftype == "refers"
+            return refers(subitems, issues, (negop == "-"))
+          else
+            return refered(issues, subitems, (negop == "-"))
+          end
         end
+
+        issues = client.search_issues(query).items
       end
 
       def scan(client, repos, type, formatter)
@@ -47,36 +57,46 @@ module Octaccord
       end
 
       def refers(parents, issues, negop)
+        parents, children = corss_reference(parents, issues, negop)
+        return children
+      end
+
+      def refered(parents, issues, negop)
+        parents, children = corss_reference(parents, issues, negop)
+        return parents
+      end
+
+      def corss_reference(parents, children, negop)
         if $OCTACCORD_DEBUG
+          STDERR.puts "* PARENTS: #{parents.map{|i| i.number}.join(', ')}"
+          STDERR.puts "* CHILDREN: #{children.map{|i| i.number}.join(', ')}"
           STDERR.puts "* NEGOP: #{negop}"
-          STDERR.puts "* BEGIN parents ********************************************"
-          STDERR.puts parents.map{|i| i.number}.join(',')
-          STDERR.puts "* END parents ********************************************"
-          STDERR.puts "* BEGIN issues *********************************************"
-          STDERR.puts issues.map{|i| i.number}.join(',')
-          STDERR.puts "* END issues *********************************************"
         end
 
-        children = []
+        refered_parents = []
+        refering_children = []
 
         parents.each do |parent|
-          STDERR.puts "ABOUT PARENT #{parent.number}:" if $OCTACCORD_DEBUG
-          issues.each do |issue|
-            Octaccord::Formatter::Issue.new(issue).references.each do |refer_num|
-              STDERR.puts "  REFER #{issue.number} refers #{refer_num}" if $OCTACCORD_DEBUG
+          STDERR.puts "ABOUT PARENT: #{parent.number}:" if $OCTACCORD_DEBUG
+          children.each do |child|
+            Octaccord::Formatter::Issue.new(child).references.each do |refer_num|
+              STDERR.puts "  child #{child.number} refers #{refer_num} #{parent.number.to_i == refer_num ? " FOUND" : "" }" if $OCTACCORD_DEBUG
               if parent.number.to_i == refer_num
                 STDERR.puts "FOUND #{refer_num}" if $OCTACCORD_DEBUG
-                children << issue
+                refered_parents << parent
+                refering_children << child
               end
             end
           end
         end
-        children.uniq!
+
+        refered_parents.uniq!
+        refering_children.uniq!
 
         if negop
-          return issues - children
+          return [parents-refered_parents, children-refering_children]
         else
-          return children
+          return [refered_parents, refering_children]
         end
       end
 
