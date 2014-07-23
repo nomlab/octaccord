@@ -114,6 +114,19 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: commands
+  ################################################################
+  desc "commands", "List available commands"
+
+  long_desc <<-LONGDESC
+    List available commands for shell-completion helper"
+  LONGDESC
+
+  def commands
+    self.class.commands.each{|name,_| puts name}
+  end
+
+  ################################################################
   ## Command: comments
   ################################################################
   desc "comments REPOSITORY", "list comments created in a period of time"
@@ -128,6 +141,24 @@ class OctaccordCLI < Thor
     since  = Time.iso8601(options[:since])
     before = if options[:before] then Time.iso8601(options[:before]) else Time.now end
     Octaccord::Command::Comments.new(client, repos, since, before)
+  end
+
+  ################################################################
+  ## Command: completions
+  ################################################################
+  desc "completions COMMAND", "List available options for COMMAND"
+
+  long_desc <<-LONGDESC
+    List available options for COMMAND.
+    This is supposed to be a shell-completion helper"
+  LONGDESC
+
+  def completions(command)
+    if help = self.class.commands[command]
+      (help.options.merge(self.class.class_options)).each do |name,option|
+        print "--#{name}=\n"
+      end
+    end
   end
 
   ################################################################
