@@ -182,7 +182,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: filter
   ################################################################
-  desc "server", "Invoked as server"
+  desc "filter", "Decorate markdown as filter"
 
   def filter
     block_finalize = false
