@@ -4,7 +4,11 @@ module Octaccord
       Encoding.default_external = "UTF-8"
 
       def initialize(client, repos, replace = nil, **options)
-        formatter = Octaccord::Formatter.build(formatter: options[:format] || :text)
+        if options[:format] == "json"
+          formatter = nil
+        else
+          formatter = Octaccord::Formatter.build(formatter: options[:format] || :text)
+        end
         if query = options[:search]
           items = search(client, repos, query, formatter)
         else
@@ -101,6 +105,11 @@ module Octaccord
       end
 
       def format(issues, formatter, replace = nil)
+        if formatter == nil # raw format
+          print issues.to_s
+          return
+        end
+
         issues.each do |issue|
           formatter << issue
         end
