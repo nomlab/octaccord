@@ -260,15 +260,6 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
-  ## Command: label
-  ################################################################
-  desc "label REPOSITORY", "Manipulate labels of issues"
-
-  def label(repos)
-    Octaccord::Command::Label.new(client, repos, **symbolize_keys(options))
-  end
-
-  ################################################################
   ## Command: show
   ################################################################
   desc "show REPOSITORY NUM", "Show details of issue #NUM"
