@@ -61,16 +61,16 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: scan
   ################################################################
-  desc "scan REPOSITORY", "Scan issues"
+  desc "scan REPOSITORY [OPTIONS...]", "Scan issues"
 
   long_desc <<-LONGDESC
-    scan issues and print in various formats
+    scan and print issues in various formats
   LONGDESC
 
-  method_option :format, :desc => "Set printing format (debug,list,number,pbl,table,text)"
-  method_option :type,   :desc => "Set type: pr or issue"
+  method_option :format, :desc => "Set printing format", :enum => %w(debug list number pbl table text)
+  method_option :type,   :desc => "Set issue type", :enum => %w(pr issue)
   method_option :search, :desc => "Set search query"
-  method_option :topology, :desc => "Set information file name for topological sort"
+  method_option :topology, :desc => "Set information file name for topological sort", :banner => "FILE"
 
   def scan(repos)
     if options[:topology] == "-"
@@ -84,7 +84,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: update_issues
   ################################################################
-  desc "update_issues REPOSITORY NUM...", "Update issues"
+  desc "update_issues REPOSITORY [OPTIONS...] NUM...", "Update issues"
 
   long_desc <<-LONGDESC
     update issues in specified repository
@@ -100,7 +100,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: add_collaborator
   ################################################################
-  desc "add_collaborator REPOSITORY", "Add collaborator of repository"
+  desc "add_collaborator REPOSITORY [OPTIONS...]", "Add collaborator of repository"
 
   long_desc <<-LONGDESC
     add users or team members to collaborator of repository
@@ -129,13 +129,13 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: comments
   ################################################################
-  desc "comments REPOSITORY", "list comments created in a period of time"
+  desc "comments REPOSITORY [OPTIONS...]", "List comments created in a period of time"
 
   long_desc <<-LONGDESC
     list comments created in a period of time
   LONGDESC
 
-  method_option :since,  :banner => "ISO8601_DATETIME", :desc => "Only comments updated at or after this time", :required => true
+  method_option :since,  :banner => "ISO8601_DATETIME", :desc => "Only comments updated at or after this time"
   method_option :before, :banner => "ISO8601_DATETIME", :desc => "Only comments updated at or before this time"
   def comments(repos)
     since  = Time.iso8601(options[:since])
@@ -146,11 +146,11 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: completions
   ################################################################
-  desc "completions COMMAND", "List available options for COMMAND"
+  desc "completions [COMMAND]", "List available commands or options for COMMAND"
 
   long_desc <<-LONGDESC
-    List available options for COMMAND.
-    This is supposed to be a shell-completion helper"
+    List available commands or options for COMMAND
+    This is supposed to be a zsh compsys helper"
   LONGDESC
 
   def completions(command)
@@ -164,17 +164,17 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: create_iteration
   ################################################################
-  desc "create_iteration REPOSITORY ITERATION_NAME", "make new iteration record"
+  desc "create_iteration REPOSITORY ITERATION_NAME", "Make new iteration record file"
 
   long_desc <<-LONGDESC
-    Make new iteration record file from skeleton
+    Make a new iteration record file from skeleton
   LONGDESC
 
-  method_option :due,      :desc => "due date"
-  method_option :manager,  :desc => "set manager"
-  method_option :start,    :desc => "start date"
+  method_option :start,    :desc => "start date-time", :banner => "ISO8601_DATETIME"
+  method_option :due,      :desc => "due date-time", :banner => "ISO8601_DATETIME"
+  method_option :manager,  :desc => "set manager name", :banner => "USER"
   method_option :team,     :desc => "set github organization/team style team name"
-  method_option :template, :desc => "set ERB template"
+  method_option :template, :desc => "set ERB template", :banner => "FILE"
   def create_iteration(repos, iteration_name)
     Octaccord::Command::CreateIteration.new(client, repos, iteration_name, **symbolize_keys(options))
   end
