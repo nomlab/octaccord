@@ -82,6 +82,21 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: subscriptions
+  ################################################################
+  desc "subscriptions", "List your watching repositories"
+
+  long_desc <<-LONGDESC
+    List your watching repositories
+  LONGDESC
+
+  def subscriptions
+    client.subscriptions.each do |repos|
+      puts repos.full_name
+    end
+  end
+
+  ################################################################
   ## Command: update_issues
   ################################################################
   desc "update_issues REPOSITORY [OPTIONS...] NUM...", "Update issues"
