@@ -16,7 +16,7 @@ module Octaccord
             if label = options[:remove_label]
               response = client.remove_label(repos, number, label)
               pp response if options[:debug]
-              puts "Remove label #{label} fromm ##{number}."
+              puts "Remove label #{label} from ##{number}."
             end
           rescue Octokit::ClientError => e
             STDERR.puts "Error: ##{issue} -- #{e.message.split(' // ').first}"
