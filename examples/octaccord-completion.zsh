@@ -1,16 +1,11 @@
-compctl -K _octaccord octaccord
+compdef _octaccord octaccord
 
-_octaccord() {
-  local words completions
-  read -cA words
+_octaccord () {
+  local curcontext="$curcontext"
+  local line state _opts
 
-  if [ "${#words}" -eq 2 ]; then
-    completions="$(octaccord commands)"
-  elif [ "${#words}" -eq 3 ]; then
-    completions=$(git remote -v | sed 's!.*github.com[/:]!!' | sed 's/\.git .*//' | sed 's/\.wiki$//' | sort | uniq)
-  else
-    completions="$(octaccord completions ${words[2]})"
-  fi
+  _opts=("${(@f)$(octaccord completions -- ${(Q)words[2,-1]})}")
+  $_opts && return 0
 
-  reply=("${(ps:\n:)completions}")
+  return 1
 }

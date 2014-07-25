@@ -43,7 +43,7 @@ class FileStore
 end
 
 class OctaccordCLI < Thor
-  check_unknown_options!
+  check_unknown_options! :except => :completions
   package_name 'Octaccord'
 
   class_option :debug, :type => :boolean, :desc => "Set debug flag"
@@ -129,19 +129,6 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
-  ## Command: commands
-  ################################################################
-  desc "commands", "List available commands"
-
-  long_desc <<-LONGDESC
-    List available commands for shell-completion helper"
-  LONGDESC
-
-  def commands
-    self.class.commands.each{|name,_| puts name}
-  end
-
-  ################################################################
   ## Command: comments
   ################################################################
   desc "comments REPOSITORY [OPTIONS...]", "List comments created in a period of time"
@@ -161,19 +148,17 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: completions
   ################################################################
-  desc "completions [COMMAND]", "List available commands or options for COMMAND"
+  desc "completions [COMMAND]", "List available commands or options for COMMAND", :hide => true
 
   long_desc <<-LONGDESC
     List available commands or options for COMMAND
     This is supposed to be a zsh compsys helper"
   LONGDESC
 
-  def completions(command)
-    if help = self.class.commands[command]
-      (help.options.merge(self.class.class_options)).each do |name,option|
-        print "--#{name}=\n"
-      end
-    end
+  def completions(*command)
+    help = self.class.commands
+    global_options = self.class.class_options
+    Octaccord::Command::Completions.new(help, global_options, command)
   end
 
   ################################################################
