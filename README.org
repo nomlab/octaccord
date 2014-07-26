@@ -92,3 +92,4 @@
       #+END_SRC
 
    You may add ~/src/octaccord/bin directory to your $PATH for dogfooding.
+   If you are zsh user, [[file:examples/octaccord-completion.zsh]] would help you.
