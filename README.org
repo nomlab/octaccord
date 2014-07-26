@@ -1,0 +1,94 @@
+#+TITLE: octaccord
+#+AUTHOR: Nomura Laboratory, Yoshinari Nomura
+#+EMAIL:
+#+DATE: 2014-07-26
+#+OPTIONS: H:3 num:2 toc:nil
+#+OPTIONS: ^:nil @:t \n:nil ::t |:t f:t TeX:t
+#+OPTIONS: skip:nil
+#+OPTIONS: author:t
+#+OPTIONS: email:nil
+#+OPTIONS: creator:nil
+#+OPTIONS: timestamp:nil
+#+OPTIONS: timestamps:nil
+#+OPTIONS: d:nil
+#+OPTIONS: tags:t
+#+TEXT:
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE: ja
+#+LATEX_CLASS: jsarticle
+#+LATEX_CLASS_OPTIONS: [a4j]
+# #+LATEX_HEADER: \usepackage{plain-article}
+# #+LATEX_HEADER: \renewcommand\maketitle{}
+# #+LATEX_HEADER: \pagestyle{empty}
+# #+LaTeX: \thispagestyle{empty}
+
+* Octaccord
+** What is octaccord?
+
+   Octaccord is a small CLI tool to manipulate issues (tickets) for the GitHub.
+   It reduces some complex operations on the issues of GitHub:
+
+   + Bulk label update with complex search queries
+   + Pretty issue printer in many format including Markdown
+   + Extract statistic information to the GitHub Wiki
+
+** INSTALL for developers:
+   Current code is a very alpha and kind of proof-of-concept demonstration.
+   I recommend you not to install via usual gem-style procedure.
+
+   1) Install rbenv + ruby-build
+      (see https://github.com/sstephenson/rbenv#basic-github-checkout for details)
+      #+BEGIN_SRC shell-script
+        $ git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+        $ git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+        # Edit your shell dot files to add some path and environment variables.
+      #+END_SRC
+
+   2) Install Latest Ruby and bundler
+      #+BEGIN_SRC shell-script
+        # Install ruby 2.1.2
+        $ rbenv install 2.1.2
+
+        # Installation check
+        $ rbenv global 2.1.2
+        $ ruby -v # -> You will see: ruby 2.1.2...
+
+        # Install bundler for your new Ruby
+        $ gem install bundler
+
+        # Get back to your sytem default Ruby if you want
+        $ rbenv global system # say, /usr/bin/ruby
+        $ ruby -v
+      #+END_SRC
+
+   3) Clone octaccord from github
+      #+BEGIN_SRC shell-script
+        $ git clone git@github.com:nomlab/octaccord.git ~/src/octaccord
+      #+END_SRC
+
+   4) Set default ruby version in octaccord project
+      #+BEGIN_SRC shell-script
+        $ cd ~/src/octaccord
+        $ echo '2.1.2' > .ruby-version
+        $ ruby -v # -> You will see: ruby 2.1.2...
+      #+END_SRC
+
+   5) Install requied gem packages in sandbox ~/src/octaccord/vendor/bundle
+      #+BEGIN_SRC shell-script
+        $ cd ~/src/octaccord
+        $ bundle install --path vendor/bundle
+      #+END_SRC
+
+   6) Setup data-cache and auth-cache directory
+      #+BEGIN_SRC shell-script
+        $ mkdir -p ~/.cache/octaccord
+        $ mkdir -p ~/.pit
+      #+END_SRC
+
+   7) Check if octaccord is alive.
+      #+BEGIN_SRC shell-script
+        $ ~/src/octaccord/bin/octaccord scan nomlab/octaccord
+      #+END_SRC
+
+   You may add ~/src/octaccord/bin directory to your $PATH for dogfooding.

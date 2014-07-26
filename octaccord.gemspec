@@ -6,11 +6,11 @@ require 'octaccord/version'
 Gem::Specification.new do |spec|
   spec.name          = "octaccord"
   spec.version       = Octaccord::VERSION
-  spec.authors       = ["Yoshinari Nomura"]
-  spec.email         = ["TODO: Write your email address"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.authors       = ["Nomura Laboratory", "Yoshinari Nomura"]
+  spec.email         = ["nom@quickhack.net"]
+  spec.summary       = %q{Issue-manipulation tool for the GitHub.}
+  spec.description   = %q{Octaccord is a small issue-manipulation tool for GitHub.}
+  spec.homepage      = "https://github.com/nomlab/octaccord"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
