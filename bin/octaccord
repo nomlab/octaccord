@@ -61,7 +61,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: scan
   ################################################################
-  desc "scan REPOSITORY [OPTIONS...]", "Scan issues"
+  desc "scan REPOSITORY", "Scan issues"
 
   long_desc <<-LONGDESC
     scan and print issues in various formats
@@ -99,7 +99,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: update_issues
   ################################################################
-  desc "update_issues REPOSITORY [OPTIONS...] NUM...", "Update issues"
+  desc "update_issues REPOSITORY NUM...", "Update issues"
 
   long_desc <<-LONGDESC
     update issues in specified repository
@@ -115,7 +115,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: add_collaborator
   ################################################################
-  desc "add_collaborator REPOSITORY [OPTIONS...]", "Add collaborator to a REPOSITORY"
+  desc "add_collaborator REPOSITORY", "Add collaborator to a REPOSITORY"
 
   long_desc <<-LONGDESC
     add users or team members to collaborator of repository
@@ -131,7 +131,7 @@ class OctaccordCLI < Thor
   ################################################################
   ## Command: comments
   ################################################################
-  desc "comments REPOSITORY [OPTIONS...]", "List comments created in a period of time"
+  desc "comments REPOSITORY", "List comments created in a period of time"
 
   long_desc <<-LONGDESC
     list comments created in a period of time
