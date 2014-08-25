@@ -88,6 +88,7 @@
 
    7) Check if octaccord is alive.
       #+BEGIN_SRC shell-script
+        $ export EDITOR=vi
         $ ~/src/octaccord/bin/octaccord scan nomlab/octaccord
       #+END_SRC
 
