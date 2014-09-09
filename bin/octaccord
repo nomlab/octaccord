@@ -53,6 +53,11 @@ class OctaccordCLI < Thor
   default_command :help
   map ["--help", "-h"] => :help
 
+  desc "help [COMMAND]", "Describe available commands or one specific command"
+  def help(command = nil)
+    super(command)
+  end
+
   desc "version", "Show version"
   def version
     puts Octaccord::VERSION
