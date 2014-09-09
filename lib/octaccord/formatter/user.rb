@@ -26,7 +26,8 @@ module Octaccord
       end
 
       def avatar
-        return "![#{@resource.login}](#{@resource.avatar_url}s=20 \"#{@resource.login}\")"
+        sep = (/\?/ =~ @resource.avatar_url) ? "&" : "?"
+        return "![#{@resource.login}](#{@resource.avatar_url}#{sep}s=20 \"#{@resource.login}\")"
       end
 
       def references
