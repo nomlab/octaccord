@@ -3,49 +3,101 @@ module Octaccord
     class Completions
 
       def initialize(help, global_options, arguments)
+        @help, @global_options, @arguments = help, global_options, arguments
         command_name = arguments.first
 
         if command_name and help[command_name]
-          options(help, global_options, command_name)
+          option_arguments(help, global_options, command_name)
         else
-          commands(help)
+          command_arguments
         end
       end
 
       private
 
-      def commands(help)
-        puts "_values"
-        puts "Sub-commands:"
-        puts "help[Available commands or one specific COMMAND]"
-
-        help.each do |name, option|
-          next if name == "completions"
-          puts "#{name}[#{option.description}]"
-        end
+      def command_arguments
+        print "_arguments\n"
+        print "1:Possible commands\\::"
+        print possible_commands + "\n"
       end
 
-      def options(help, global_options, command_name)
-        print "_arguments\n-A\n*\n"
-        options = help[command_name].options.merge(global_options)
+      def option_arguments(help, global_options, command_name)
+        command_arguments
+        print arguments(help, command_name)
+        print options(help[command_name], global_options)
+      end
+
+      # make normal argument completion setting from usage string such as: "scan REPOSITORY"
+      def arguments(help, command_name, position = 2)
+        str = ""
+        help[command_name].usage.split(/\s+/)[1..-1].each do |arg|
+          pos = position
+
+          if /^\[(.*)\]/ =~ arg
+            arg = $1
+          end
+
+          multi = ""
+          if /(.*)\.\.\.$/ =~ arg
+            arg = $1
+            pos = "*"
+            multi = ":"
+          end
+
+          str << "#{pos}:#{arg}\\::#{possible_values(arg)}#{multi}\n"
+          position += 1
+        end
+        return str
+      end
+
+      # make option argument completion setting from usage options help
+      def options(command_help, global_options, position = 2)
+        str = ""
+        options = command_help.options.merge(global_options)
 
         options.each do |name, opt|
+          name = name.to_s.gsub("_", "-")
+
           if opt.type == :boolean
-            print "(--#{name})--#{name}[#{opt.description}]\n"
+            str << "(--#{name})--#{name}[#{opt.description}]\n"
           else
-            print "(--#{name})--#{name}=-[#{opt.description}]:#{opt.banner}:#{possible_values(opt)}\n"
+            str << "(--#{name})--#{name}=-[#{opt.description}]:#{opt.banner}:#{possible_values_for_opt(opt)}\n"
           end
         end
+        return str
       end
 
-      def possible_values(option)
-        return "(" + option.enum.join(" ") + ")" if option.enum
+      def possible_commands
+        str = "(("
+        @help.each_value do |cmd|
+          next if cmd.name == "completions"
+          str << " #{cmd.name}\\:"
+          str << cmd.description.gsub(/([()\s"';&|#\\])/, '\\\\\1')
+        end
+        str << "))"
+      end
 
-        case option.banner
-        when "FILE"
+      def possible_values_for_opt(option)
+        return "(" + option.enum.join(" ") + ")" if option.enum
+        return possible_values(option.banner)
+      end
+
+      def possible_values(banner)
+        case banner
+        when "REPOSITORY"
+          if /([^:\/]+\/[^\/]+?)(\.wiki)?\.git/ =~ `git remote -v 2>/dev/null`
+            "(#{$1})"
+          else
+            ""
+          end
+        when /^(FILE|CONF)/
           "_files"
-        when "DIRECTORY"
+        when /^DIR/
           "_files -/"
+        when "COMMAND"
+          possible_commands
+        when /^NUM/
+          "_guard '[0-9]#' 'Number'"
         else
           ""
         end
