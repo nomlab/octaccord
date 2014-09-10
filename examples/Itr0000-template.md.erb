@@ -53,7 +53,7 @@ $ mv tmp.md Product-Backlog.md
 * 個々の PBL Issue に関する技術的議論は，その Issue のコメント欄に記述した．
 * 以下，[PBL Issues](../issues?labels=PBL&state=open&sort=updated) から octaccord によって自動抽出した結果を示す．
 
-<!-- begin:octaccord scan <%= repos %> --search="label:PBL label:<%= itr.name %>" --format=pbl --topology=Product-Backlog.md -->
+<!-- begin:octaccord scan <%= repos %> --search="label:PBL label:<%= itr.name %> state:open state:closed" --format=pbl --topology=Product-Backlog.md -->
 <!-- end:octaccord -->
 
 #### 本議論中で更新された Issue コメント一覧
@@ -63,7 +63,7 @@ $ mv tmp.md Product-Backlog.md
 
 ### 2. Work Item Assignments
 
-<!-- begin:octaccord scan <%= repos %> --search="label:<%= itr.name %> -label:PBL" --format=list -->
+<!-- begin:octaccord scan <%= repos %> --search="label:<%= itr.name %> -label:PBL state:open state:closed" --format=list -->
 <!-- end:octaccord -->
 
 ### 3. Evaluation Criteria
