@@ -185,6 +185,19 @@ class OctaccordCLI < Thor
   end
 
   ################################################################
+  ## Command: create_issue
+  ################################################################
+  desc "create_issue REPOSITORY TITLE BODY", "create issue"
+
+  long_desc <<-LONGDESC
+    create issues in specified repository
+  LONGDESC
+
+  def create_issues(repo, title, body)
+    Octaccord::Command::CreateIssue.new(client, repo, title, body, **symbolize_keys(options))
+  end
+
+  ################################################################
   ## Command: filter
   ################################################################
   desc "filter", "Decorate markdown as filter"

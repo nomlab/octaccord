@@ -12,5 +12,6 @@ module Octaccord
     autoload :Show,            "#{dir}/show.rb"
     autoload :UpdateIssues,    "#{dir}/update_issues.rb"
     autoload :CreateIteration, "#{dir}/create_iteration.rb"
+    autoload :CreateIssue,     "#{dir}/create_issue.rb"
   end # module Command
 end # module Octaccord
