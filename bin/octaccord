@@ -34,11 +34,15 @@ class FileStore
     else
       STDERR.puts "MISS #{key}" if $OCTACCORD_DEBUG
     end
-    value
+    value && Marshal.load(value)
   end
 
   def write(key, value)
-    @cache[key] = value
+    @cache[key] = Marshal.dump(value)
+  end
+
+  def delete(key)
+    @cache.delete(key)
   end
 end
 
@@ -308,7 +312,7 @@ class OctaccordCLI < Thor
       @store ||= FileStore.new
       @stack ||= Faraday::RackBuilder.new do |builder|
         builder.response :logger if options[:debug]
-        builder.use Faraday::HttpCache, shared_cache: false, store: @store, serializer: YAML
+        builder.use Faraday::HttpCache, shared_cache: false, store: @store, serializer: Marshal
         builder.use Octokit::Response::RaiseError
         builder.adapter Faraday.default_adapter
       end
