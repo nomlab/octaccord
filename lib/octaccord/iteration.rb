@@ -4,7 +4,7 @@ module Octaccord
   class Iteration
     attr_accessor :name, :start, :due, :manager, :repository
 
-    def initialize(client: client, name: name, manager: manager, start: start, due: due, team: team, repository: repository)
+    def initialize(client:, name:, manager:, start:, due:, team:, repository:)
       if /([^\d]+)(\d+)/ =~ name
         @prefix, @number = $1, $2.to_i
       end
